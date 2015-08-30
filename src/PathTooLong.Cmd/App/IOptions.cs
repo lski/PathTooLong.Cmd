@@ -2,12 +2,12 @@
 
 	public interface IOptions {
 
-		string Path();
+		string Path { get; }
 
 		/// <summary>
 		/// States whether the program should just run without human intervention or warning
 		/// </summary>
-		bool Silent();
+		bool Silent { get; }
 
 		/// <summary>
 		/// Returns the process desired based on the options

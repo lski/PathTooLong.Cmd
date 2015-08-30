@@ -36,8 +36,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PathTooLong, Version=0.1.0.26330, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PathTooLong.0.1.0\lib\net40\PathTooLong.dll</HintPath>
+    <Reference Include="PathTooLong, Version=0.2.2.28108, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PathTooLong.0.2.2\lib\net40\PathTooLong.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App\Processes\Copy.cs" />
     <Compile Include="AssemblyLoader.cs" />
     <Compile Include="App\IOptions.cs" />
     <Compile Include="App\IOutput.cs" />

@@ -1,6 +1,7 @@
 ﻿using PathTooLong.Cmd.App;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace PathTooLong.Cmd {
 
@@ -15,7 +16,9 @@ namespace PathTooLong.Cmd {
 
 		private static void Run(IEnumerable<string> args) {
 
-			new Options(args).Process.Run();
+			var options = new Options(args);
+
+			options.Process.Run();
 		}
 	}
 }

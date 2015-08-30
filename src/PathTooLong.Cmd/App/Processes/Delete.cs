@@ -5,11 +5,11 @@ namespace PathTooLong.Cmd.App.Processes {
 
 	public class Delete : IProcess {
 
-		private readonly Options _options;
-		private readonly IOutput _output;
-		private readonly IFileSystemScanner _scanner;
-		private readonly IFileSystemManager _manager;
-		private readonly IPathUtility _paths;
+		readonly Options _options;
+		readonly IOutput _output;
+		readonly IFileSystemScanner _scanner;
+		readonly IFileSystemManager _manager;
+		readonly IPathUtility _paths;
 
 		public Delete(Options options) {
 
@@ -31,7 +31,7 @@ namespace PathTooLong.Cmd.App.Processes {
 
 		public void Run() {
 
-			var path = _options.Path();
+			var path = _options.Path;
 
 			try {
 
@@ -44,7 +44,7 @@ namespace PathTooLong.Cmd.App.Processes {
 				if (!_scanner.Exists(path)) {
 
 					// Only attempt to check in the current directory if not silent (to avoid accidently deletes)
-					if (!_options.Silent() && !_paths.IsRooted(path)) {
+					if (!_options.Silent && !_paths.IsRooted(path)) {
 
 						path = _paths.Combine(_paths.CurrentDirectory, path);
 
@@ -84,7 +84,7 @@ namespace PathTooLong.Cmd.App.Processes {
 			}
 			finally {
 
-				if (!_options.Silent()) {
+				if (!_options.Silent) {
 					_output.Wait("\nPress any key to continue\n");
 				}
 			}
@@ -93,7 +93,7 @@ namespace PathTooLong.Cmd.App.Processes {
 		private void ProcessFile(FileSystemData data) {
 
 			// Double check they actually want to delete that file/directory
-			if (!_options.Silent()) {
+			if (!_options.Silent) {
 
 				_output.WriteWarning("WARNING ")
 					  .WriteHighlight("This process can not be undone\n")
@@ -145,7 +145,7 @@ namespace PathTooLong.Cmd.App.Processes {
 			}
 			
 			// Double check they actually want to delete that file/directory
-			if (!_options.Silent()) {
+			if (!_options.Silent) {
 
 				_output.WriteWarning("WARNING ")
 					   .WriteHighlight("This process can not be undone\n")

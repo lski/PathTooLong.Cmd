@@ -10,6 +10,7 @@ namespace PathTooLong.Cmd.App {
 
 		readonly IEnumerable<string> _args;
 		bool? _silent;
+		bool? _overwrite;
 
 		public Options(IEnumerable<string> args) {
 
@@ -82,6 +83,17 @@ namespace PathTooLong.Cmd.App {
 				}
 
 				return _silent.Value;
+			}
+		}
+
+		public bool Overwrite {
+			get {
+
+				if (_overwrite == null) {
+					_overwrite = _args.Any(x => Regex.IsMatch(x, "-overwrite", RegexOptions.IgnoreCase));
+				}
+
+				return _overwrite.Value;
 			}
 		}
 

@@ -5,16 +5,16 @@ using System.Diagnostics;
 
 namespace PathTooLong.Cmd {
 
-	internal class Program {
+	class Program {
 
-		private static void Main(string[] args) {
+		static void Main(string[] args) {
 
 			AssemblyLoader.Register();
 
 			Run(args);
 		}
 
-		private static void Run(IEnumerable<string> args) {
+		static void Run(IEnumerable<string> args) {
 
 			var options = new Options(args);
 

@@ -29,7 +29,24 @@ namespace PathTooLong.Cmd.App.Processes {
 		}
 
 		public void Run() {
-			throw new NotImplementedException();
+
+			try {
+
+				_manager.Copy(_options.Source, _options.Destination, _options.Overwrite);
+
+			}
+			catch (Exception ex) {
+
+				_output.Write(ex.Message);
+				return;
+			}
+			finally {
+
+				if (!_options.Silent) {
+					_output.Wait("\nPress any key to continue\n");
+				}
+			}
+			
 		}
 	}
 }

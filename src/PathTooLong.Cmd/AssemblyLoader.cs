@@ -12,7 +12,7 @@ namespace PathTooLong.Cmd {
 	/// </summary>
 	public class AssemblyLoader {
 
-		private readonly Assembly _assembly;
+		readonly Assembly _assembly;
 
 		public AssemblyLoader(AppDomain domain, Assembly assembly) {
 

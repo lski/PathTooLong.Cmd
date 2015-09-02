@@ -8,78 +8,61 @@ namespace PathTooLong.Cmd.App {
 
 	public class Options : IOptions {
 
-		readonly IEnumerable<string> _args;
 		bool? _silent;
 		bool? _overwrite;
+		string _path;
+		string _to;
+		readonly Dictionary<string, IEnumerable<string>> _args;
 
 		public Options(IEnumerable<string> args) {
 
-			_args = args;
+			if (args == null && args.Count() == 0) {
+				throw new ArgumentException(nameof(args));
+			}
+
+			_args = SplitArgs(args, ParseKey);
 		}
 
 		public string Path {
 			get {
-				if (_args.Any()) {
 
-					var arg = _args.ElementAt(0);
-
-					if (!arg.StartsWith("-", StringComparison.OrdinalIgnoreCase)) {
-						return arg;
-					}
-
-					if (Regex.IsMatch(arg, "^(-path|-delete)")) {
-						return _args.ElementAt(1);
-					}
+				if (_path != null) {
+					return _path;
 				}
 
-				throw new ArgumentNullException(nameof(Path));
-			}
-		}
+				// Cache it
+				_path = (from a in _args where Regex.IsMatch(a.Key, "^(-delete|-copy)") select a.Value.First()).FirstOrDefault();
 
-		public string Source {
-			get {
-				var to = _args.Select((Arg, Index) => new { Arg, Index })
-								.Where(x => Regex.IsMatch(x.Arg, "^-copy"))
-								.FirstOrDefault();
-
-				if (to != null) {
-
-					var position = to.Index + 1;
-
-					if (position <= _args.Count()) {
-
-						return _args.ElementAt(position);
-					}
+				if (_path == null) {
+					throw new ArgumentNullException(nameof(Path));
 				}
 
-				throw new ArgumentNullException(nameof(Source));
+				return _path;
 			}
 		}
 
 		public string Destination {
 			get {
-				var to = _args.Select((Arg, Index) => new { Arg, Index })
-												.Where(x => Regex.IsMatch(x.Arg, "^(-to|-dest)"))
-												.FirstOrDefault();
-
-				if (to != null) {
-
-					var position = to.Index + 1;
-
-					if (position <= _args.Count()) {
-
-						return _args.ElementAt(position);
-					}
+				
+				if (_to != null) {
+					return _to;
 				}
 
-				throw new ArgumentNullException(nameof(Destination));
+				// Cache it
+				_to = (from a in _args where a.Key == "-dest" select a.Value.First()).FirstOrDefault();
+
+				if (_to == null) {
+					throw new ArgumentNullException(nameof(Destination));
+				}
+
+				return _to;
 			}
 		}
 
 		public bool Silent {
 			get {
 				if (_silent == null) {
-					_silent = _args.Any(x => Regex.IsMatch(x, "-silent", RegexOptions.IgnoreCase));
+					_silent = _args.Any(arg => arg.Key == "-silent");
 				}
 
 				return _silent.Value;
@@ -90,7 +73,7 @@ namespace PathTooLong.Cmd.App {
 			get {
 
 				if (_overwrite == null) {
-					_overwrite = _args.Any(x => Regex.IsMatch(x, "-overwrite", RegexOptions.IgnoreCase));
+					_overwrite = _args.Any(arg => arg.Key == "-overwrite");
 				}
 
 				return _overwrite.Value;
@@ -100,21 +83,70 @@ namespace PathTooLong.Cmd.App {
 		public IProcess Process {
 			get {
 
-				if (_args.Any()) {
+				if (_args.Any(arg => arg.Key == "-delete")) {
 
-					var arg = _args.ElementAt(0);
+					return new Delete(this);
+				}
 
-					if (Regex.IsMatch(arg, "^(-path|[^-]|-delete)")) {
-						return new Delete(this);
-					}
+				if (_args.Any(arg => arg.Key == "-copy")) {
 
-					if (Regex.IsMatch(arg, "^-copy")) {
-						return new Copy(this);
-					}
+					return new Copy(this);
 				}
 
 				throw new ArgumentNullException(nameof(Process));
 			}
+		}
+
+
+
+		string ParseKey(string key) {
+
+			key = key.ToLowerInvariant();
+
+			if (Regex.IsMatch(key, "^(^$|^-path)")) {
+				return "-delete";
+			}
+
+			if (Regex.IsMatch(key, "^(-to|-dest)")) {
+				return "-dest";
+			}
+
+			return key;
+		}
+
+		Dictionary<string, IEnumerable<string>> SplitArgs(IEnumerable<string> args, Func<string, string> keyNameParser) {
+
+			var splitArgs = new Dictionary<string, IEnumerable<string>>();
+
+			var i = 0;
+			List<string> values = null;
+
+			foreach (var item in args) {
+				
+				if(i++ == 0 && !item.StartsWith("-", StringComparison.OrdinalIgnoreCase)) {
+
+					values = new List<string>() {
+						item
+					};
+
+					splitArgs.Add(keyNameParser(""), values);
+
+					continue;
+				}
+
+				if (item.StartsWith("-", StringComparison.OrdinalIgnoreCase)) {
+
+					values = new List<string>();
+
+					splitArgs.Add(keyNameParser(item), values);
+
+					continue;
+				}
+
+				values.Add(item);
+			}
+
+			return splitArgs;
 		}
 	}
 }

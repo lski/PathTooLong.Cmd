@@ -90,7 +90,7 @@ namespace PathTooLong.Cmd.App.Processes {
 			}
 		}
 
-		private void ProcessFile(FileSystemData data) {
+		void ProcessFile(FileSystemData data) {
 
 			// Double check they actually want to delete that file/directory
 			if (!_options.Silent) {
@@ -123,7 +123,7 @@ namespace PathTooLong.Cmd.App.Processes {
 			}
 		}
 
-		private void ProcessDirectory(FileSystemData data) {
+		void ProcessDirectory(FileSystemData data) {
 
 			DirectoryDataSnapshot dir;
 
@@ -143,7 +143,7 @@ namespace PathTooLong.Cmd.App.Processes {
 				_output.Write(ipsex.Message);
 				return;
 			}
-			
+
 			// Double check they actually want to delete that file/directory
 			if (!_options.Silent) {
 
@@ -175,8 +175,6 @@ namespace PathTooLong.Cmd.App.Processes {
 			catch (Exception ex) {
 
 				_output.Write(ex.Message);
-				//_output.Write("The directory was not fully deleted, it may be open in another application such as the file explorer. ")
-				//	   .Write("Close that application and please try again.\n");
 			}
 		}
 	}

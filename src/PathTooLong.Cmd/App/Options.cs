@@ -16,7 +16,7 @@ namespace PathTooLong.Cmd.App {
 
 		public Options(IEnumerable<string> args) {
 
-			if (args == null && args.Count() == 0) {
+			if (args == null) {
 				throw new ArgumentException(nameof(args));
 			}
 
@@ -93,7 +93,7 @@ namespace PathTooLong.Cmd.App {
 					return new Copy(this);
 				}
 
-				throw new ArgumentNullException(nameof(Process));
+				return new Help(this);
 			}
 		}
 

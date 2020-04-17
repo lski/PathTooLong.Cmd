@@ -1,5 +1,11 @@
 # Path Not Too Long
 
+## Deprecated
+
+__Windows now has a feature for enabling long filenames on NTFS drives, it is recommended that you use that instead.__
+
+## Summary
+
 A command line program that allows the user to delete or copy files/folders with long path names, that normally cause the explorer to throw a PathTooLongException message to the user.
 
 It is a command line wrapper built upon [PathTooLong](https://github.com/lski/PathTooLong).
